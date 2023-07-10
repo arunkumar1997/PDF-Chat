@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 
+/public/uploads/*.pdf
+/indexes/*/
 # testing
 /coverage
 
