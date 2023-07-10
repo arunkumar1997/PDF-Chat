@@ -4,9 +4,17 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { stat } from "fs/promises";
+import { join } from "path";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-const indexDir = "./indexes";
-const uploadDir = "./public/uploads";
+const uploadDir =
+  process.env.NODE_ENV !== "production"
+    ? "./public/uploads"
+    : join(__dirname, "../../../../", "public", "uploads");
+
+const indexDir =
+  process.env.NODE_ENV !== "production"
+    ? "./indexes"
+    : join(__dirname, "../../../../", "indexes");
 
 const embeddings = new OpenAIEmbeddings({
   openAIApiKey: process.env.OPENAI_API_KEY,

@@ -6,11 +6,16 @@ import { OpenAI } from "langchain/llms/openai";
 import { RetrievalQAChain } from "langchain/chains";
 import { BufferMemory } from "langchain/memory";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
-const indexDir = "./indexes";
+import { join } from "path";
+const indexDir =
+  process.env.NODE_ENV !== "production"
+    ? "./indexes"
+    : join(__dirname, "../../../", "indexes");
 
 const embeddings = new OpenAIEmbeddings({
   openAIApiKey: process.env.OPENAI_API_KEY,
 });
+
 const store = new Map();
 
 export default async function handler(

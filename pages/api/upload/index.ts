@@ -1,8 +1,28 @@
 import { IncomingForm } from "formidable";
 import { v4 as uuidv4 } from "uuid";
-
+import { mkdir } from "fs/promises";
+import { join } from "path";
 export const config = { api: { bodyParser: false } };
-const uploadDir = "./public/uploads";
+
+// Upload Dir in .next  folder
+const uploadDir =
+  process.env.NODE_ENV !== "production"
+    ? "./public/uploads"
+    : join(__dirname, "../../../", "public", "uploads");
+
+const indexDir =
+  process.env.NODE_ENV !== "production"
+    ? "./indexes"
+    : join(__dirname, "../../../", "indexes");
+
+try {
+  await mkdir(uploadDir, { recursive: true });
+  console.log(`Folder created at ${uploadDir}`);
+  await mkdir(indexDir, { recursive: true });
+  console.log(`Folder created at ${indexDir}`);
+} catch (error) {
+  console.error(`Error creating folder: ${error}`);
+}
 
 export default async function handler(req: any, res: any) {
   const form: any = new IncomingForm({
