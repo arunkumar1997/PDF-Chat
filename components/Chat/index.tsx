@@ -56,7 +56,7 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && event.shiftKey) {
-      setPrompt((prevVal) => prevVal + "\n");
+      setPrompt((prevVal: any) => prevVal + "\n");
     } else if (
       event.key === "Enter" &&
       !event.shiftKey &&
@@ -73,7 +73,7 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
         alert("please enter prompt");
         return;
       }
-      addAiMessage(prompt);
+      addHumanMessage(prompt);
       setIsStreamingResponse(true);
       const response: any = await fetch("/api/chat", {
         method: "POST",
