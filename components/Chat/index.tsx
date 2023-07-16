@@ -3,9 +3,7 @@ import {
   Box,
   Button,
   Container,
-  Input,
   InputGroup,
-  InputRightElement,
   Stack,
   useColorMode,
   useColorModeValue,
@@ -27,6 +25,7 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
   const [aiResponse, setAiResponse] = useState("");
   const [prompt, setPrompt] = useState("");
   const boxRef = useRef<any>(null);
+  const inputRef = useRef<any>(null);
   const [rows, setRows] = useState(1);
 
   const addHumanMessage = (message: string) => {
@@ -36,7 +35,7 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
       text: message,
     });
     setChatMessages(chatMessages);
-    console.log("Setting Human resp=>", chatMessages);
+    window.sessionStorage.setItem(fileName, JSON.stringify(chatMessages));
   };
   const addAiMessage = (message: string) => {
     chatMessages.push({
@@ -45,6 +44,7 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
       text: message,
     });
     setChatMessages(chatMessages);
+    window.sessionStorage.setItem(fileName, JSON.stringify(chatMessages));
   };
 
   const handlePromptInput = (e: any) => {
@@ -94,7 +94,6 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
-          console.log("Done");
           addAiMessage(resp);
           setIsStreamingResponse(false);
           break;
@@ -114,8 +113,14 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
   };
 
   useEffect(() => {
+    if (chatMessages.length === 0 && fileName) {
+      const messages = window.sessionStorage.getItem(fileName);
+      if (messages) {
+        setChatMessages(JSON.parse(messages));
+      }
+    }
     boxRef.current.scrollTop = boxRef.current.scrollHeight;
-  }, [aiResponse, chatMessages.length]);
+  }, [aiResponse, chatMessages.length, fileName]);
 
   const shouldAddScrollbar =
     boxRef.current?.scrollHeight > boxRef.current?.clientHeight;
@@ -152,6 +157,7 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
               >
                 <InputGroup h={"100%"} border={"none"}>
                   <Textarea
+                    ref={inputRef}
                     onKeyDown={handleKeyDown}
                     border={"none"}
                     value={prompt}
@@ -160,7 +166,7 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
                     }}
                     rows={rows}
                     pr={9}
-                    disabled={isStreamingResponse}
+                    disabled={false}
                     onChange={handlePromptInput}
                     placeholder="Enter Prompt"
                     _focus={{

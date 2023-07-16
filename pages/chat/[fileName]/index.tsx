@@ -25,7 +25,7 @@ export default function Chat({ fileName }: any) {
     }
   };
   useEffect(() => {
-    indexDoc();
+    // indexDoc();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -38,7 +38,6 @@ export default function Chat({ fileName }: any) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <AppHeader />
         <ChatComponent fileName={fileName} />
       </main>
     </>
