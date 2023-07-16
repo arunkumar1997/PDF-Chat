@@ -8,9 +8,9 @@ import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { ChatOpenAI } from "langchain/chat_models/openai";
 import { HumanMessage, SystemMessage } from "langchain/schema";
 
-export const config = {
-  runtime: "edge",
-};
+// export const config = {
+//   runtime: "edge",
+// };
 const embeddings = new OpenAIEmbeddings({
   openAIApiKey: process.env.OPENAI_API_KEY,
 });
@@ -33,6 +33,7 @@ export default async function handler(
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache, no-transform");
   res.setHeader("Connection", "keep-alive");
+  res.setHeader("Content-Encoding", "none");
 
   const { prompt, fileName } = await req.body;
 
