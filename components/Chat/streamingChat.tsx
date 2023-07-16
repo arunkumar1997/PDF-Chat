@@ -1,5 +1,6 @@
-import { Stack, Avatar, Box, Text, Divider } from "@chakra-ui/react";
+import { Stack, Avatar, Box, Divider } from "@chakra-ui/react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { SiOpenai } from "react-icons/si";
 
 interface StreamingResponseProps {
@@ -14,7 +15,9 @@ export default function StreamingResponse({ text }: StreamingResponseProps) {
           <Divider my={9} />
           <Stack direction={"row"}>
             <Avatar mr={"1rem"} rounded={5} size={"sm"} icon={<SiOpenai />} />
-            <ReactMarkdown>{text}</ReactMarkdown>
+            <Box>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
+            </Box>
           </Stack>
         </Box>
       )}

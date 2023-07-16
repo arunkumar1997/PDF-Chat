@@ -56,8 +56,10 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Enter" && event.shiftKey) {
+      console.log("Adding New Like");
       setPrompt((prevVal: any) => prevVal + "\n");
-    } else if (
+    }
+    if (
       event.key === "Enter" &&
       !event.shiftKey &&
       !event.altKey &&
@@ -120,13 +122,16 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
       }
     }
     boxRef.current.scrollTop = boxRef.current.scrollHeight;
-  }, [aiResponse, chatMessages.length, fileName]);
+    if (!isStreamingResponse) {
+      inputRef.current.focus();
+    }
+  }, [aiResponse, chatMessages.length, fileName, isStreamingResponse]);
 
   const shouldAddScrollbar =
     boxRef.current?.scrollHeight > boxRef.current?.clientHeight;
   return (
     <Container maxWidth="100%">
-      <Box w={"100%"} h={"calc(100vh - 4rem)"}>
+      <Box w={"100%"} h={"100vh"}>
         <Stack
           direction={"column"}
           justify={"space-between"}
@@ -140,16 +145,30 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
               ...(shouldAddScrollbar ? { scrollbarWidth: "thin" } : {}),
             }}
           >
-            <Container maxWidth={"55%"} mt={10}>
+            <Container
+              maxWidth={{
+                sm: "100%",
+                md: "75%",
+                lg: "55%",
+                xl: "55%",
+                "2xl": "55%",
+              }}
+              mt={10}
+            >
               <ChatHistory chats={chatMessages} />
               {isStreamingResponse && <StreamingResponse text={aiResponse} />}
-              <div></div>
             </Container>
           </Box>
-          <Box width={"100%"} pb={8}>
+          <Box width={"100%"} pb={6} pt={2}>
             <Stack direction={"row"} justify={"center"}>
               <Box
-                width={"50%"}
+                width={{
+                  sm: "100%",
+                  md: "75%",
+                  xl: "50%",
+                  lg: "50%",
+                  "2xl": "50%",
+                }}
                 bg={useColorModeValue("gray.100", "gray.900")}
                 p={1}
                 rounded={6}
@@ -165,8 +184,8 @@ export default function ChatComponent({ fileName }: ChatComponentProps) {
                       resize: "none",
                     }}
                     rows={rows}
+                    disabled={isStreamingResponse}
                     pr={9}
-                    disabled={false}
                     onChange={handlePromptInput}
                     placeholder="Enter Prompt"
                     _focus={{

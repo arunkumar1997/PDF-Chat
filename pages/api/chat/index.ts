@@ -43,7 +43,6 @@ export default async function handler(
   const callbacks = [
     {
       async handleLLMNewToken(token: string) {
-        console.log("O=>", token);
         res.write(token);
       },
     },
@@ -86,7 +85,6 @@ export default async function handler(
   const resp = await chat.call([systemMessage, humanMessage], {
     callbacks,
   });
-  console.log(resp);
   store.set(fileName, chatData);
   res.end();
 }
